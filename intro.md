@@ -72,8 +72,6 @@ We recommend using auto-generated bindings where possible. In particular, wrappi
 
 Another approach if you really need custom bindings but have significant amount of code (or target-dependence) is to write your own bindings generators, either from scratch or by forking bindgen. This is more reasonable if you have some source of truth for the generated bindings other than C headers.
 
-The ssplat team has a [tool](https://www.osgwiki.com/wiki/Compare_PDB_Tool) which checks PDBs to help ensure consistency of bindings as code evolves. That can help address some of the fragility issues with non-generated bindings.
-
 Whether bindings are hand-written or auto-generated, they must follow the same rules and idioms.
 
 To call a [foreign function from Rust](https://doc.rust-lang.org/nomicon/ffi.html#calling-foreign-functions), it must be redeclared in a Rust module inside an `extern` block, e.g.:
