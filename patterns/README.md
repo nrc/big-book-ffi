@@ -16,6 +16,7 @@
 * Rust version of C object (e.g., CString (https://rust-unofficial.github.io/patterns/idioms/ffi/accepting-strings.html, https://rust-unofficial.github.io/patterns/idioms/ffi/passing-strings.html))
 * Transparent smart pointer
 * Consolidated wrapper (https://rust-unofficial.github.io/patterns/patterns/ffi/wrappers.html)
+* Strings (different windows strings, CString vs String)
 
 ## Programming idioms and best practices
 
@@ -24,4 +25,5 @@
 
 ## Anti-patterns
 
-
+* Disguising pointers as values (unclear, disguises unsafety)
+* Using C structs directly in Rust (back compat hazards including padding, due to different back compat between C and Rust)
