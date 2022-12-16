@@ -38,6 +38,8 @@ C character types can be converted to or from Rust's 8 bit integer types. `unsig
 
 A Rust `char` is a 32 bit type which must be a valid [Unicode scalar value](https://www.unicode.org/glossary/#unicode_scalar_value). It is UB to create a `char` which is not valid Unicode. You should probably avoid using `char` in FFI unless you have a custom character type with the same size and invariant in your foreign code. Otherwise it is usually better to pass numeric bytes and use helper methods on [`char`](https://doc.rust-lang.org/stable/std/primitive.char.html) to create the Rust `char`.
 
+TODO wchar_t
+
 ### Non-zero integers
 
 There are (currently unstable) type aliases for non-zero integers in `core::ffi`. These map to the non-zero integer types in [`core::num`](https://doc.rust-lang.org/nightly/core/num/index.html) with the correct size for the C integer types. The user must maintain the non-zero invariant (whether that is a safety issue depends on how the types are used); i.e., Rust does not ensure that values with this type are in fact non-zero.

@@ -2,11 +2,19 @@
 
 [Introduction](intro.md)
 
-- [Tools]()
-- [Building and linking]()
+- [Fundamentals]()
+  - [Kinds of interop]() - C lib, Rust lib, mixed program, etc.
+  - [Bindings]()
+  - [Error handling]()
+  - [Building and linking]()
+  - [Tools]()
+- Principles
+  - [Ownership and memory management]() - mem::forget
+  - [Safety]()
 - [Patterns](patterns/README.md)
   - [Layered library design](patterns/layered.md)
 - [Reference](reference/README.md)
   - [Functions and methods](reference/functions.md)
   - [Numeric types](reference/numerics.md)
+  - [Strings](reference/strings.md)
 - [Resources](resources.md)

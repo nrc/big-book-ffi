@@ -9,14 +9,17 @@
 * Serialization
 * Cross-language ownership
 
+
 ## Design patterns
 
 * Foreign dtor
 * Object-based API (https://rust-unofficial.github.io/patterns/patterns/ffi/export.html)
-* Rust version of C object (e.g., CString (https://rust-unofficial.github.io/patterns/idioms/ffi/accepting-strings.html, https://rust-unofficial.github.io/patterns/idioms/ffi/passing-strings.html))
+* Rust version of C object
+* Something about intermediate types like CString/OsString (https://rust-unofficial.github.io/patterns/idioms/ffi/accepting-strings.html, https://rust-unofficial.github.io/patterns/idioms/ffi/passing-strings.html)
 * Transparent smart pointer
 * Consolidated wrapper (https://rust-unofficial.github.io/patterns/patterns/ffi/wrappers.html)
-* Strings (different windows strings, CString vs String)
+* Strings (how to actually use them, see strings links above, https://snacky.blog/en/string-ffi-rust.html, https://dev.to/kgrech/7-ways-to-pass-a-string-between-rust-and-c-4iebZ)
+)
 
 ## Programming idioms and best practices
 
