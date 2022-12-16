@@ -3,13 +3,13 @@
 [Introduction](intro.md)
 
 - [Fundamentals]()
-  - [Kinds of interop]() - C lib, Rust lib, mixed program, etc.
+  - [Kinds of interop - C lib, Rust lib, mixed program, etc.]()
   - [Bindings]()
   - [Error handling]()
   - [Building and linking]()
   - [Tools]()
-- Principles
-  - [Ownership and memory management]() - mem::forget
+- [Principles]()
+  - [Ownership and memory management - mem::forget]()
   - [Safety]()
 - [Patterns](patterns/README.md)
   - [Layered library design](patterns/layered.md)
