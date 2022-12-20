@@ -24,7 +24,7 @@ C strings are pointers to a nul-terminated sequence of `char`s. They may have ei
 
 ### C++
 
-The C++ standard library includes the `string` type (which is actually an alias of an instantiated generic type `basic_string<char>`). Like the C string type it does not have a specified encoding. Its methods are all byte-oriented (i.e., have no concept of a character beyond a `char`). It is not directly compatible with C strings and its representation is not part of its interface. It is easy to get a C string with the `c_str` method, whether this is guaranteed to return a pointer to the data in the string or a copy of it depends on the version of C++. 
+The C++ standard library includes the `string` type (which is actually an alias of an instantiated generic type `basic_string<char>`). Like the C string type it does not have a specified encoding. Its methods are all byte-oriented (i.e., have no concept of a character beyond a `char`). It is not directly compatible with C strings and its representation is not part of its interface. It is easy to get a C string with the `c_str` method, whether this is guaranteed to return a pointer to the data in the string or a copy of it depends on the version of C++.
 
 ### Windows
 
@@ -42,11 +42,11 @@ Windows primarily uses UTF-16. Rust does not have UTF-16 strings in its standard
 
 ## FFI with foreign Strings
 
-For the actual FFI, use the Rust string type which agrees with the foreign string type (see table below). 
+For the actual FFI, use the Rust string type which agrees with the foreign string type (see table below).
 
 | Foreign type | Rust type |
 |--------------|-----------|
-| C string `[const] char [const] *` | `*{const|mut} c_char` |
+| C string `[const] char [const] *` | <code class="hljs">*{const&#124;mut} c_char</code> |
 | C++ `string` | [`cxx::CxxString`](https://cxx.rs/binding/cxxstring.html) |
 | `HSTRING` | [`windows::core::HSTRING`](https://docs.rs/windows/latest/windows/core/struct.HSTRING.html) |
 | `BSTR` | [`windows::core::BSTR`](https://docs.rs/windows/latest/windows/core/struct.BSTR.html) |
