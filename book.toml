@@ -1,0 +1,8 @@
+[book]
+title = "The Big Book of Rust Interop"
+authors = ["Nick Cameron"]
+src = "."
+language = "en"
+
+[rust]
+edition = "2021"
