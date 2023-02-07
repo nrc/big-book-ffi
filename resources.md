@@ -13,6 +13,7 @@ Bindgen is the most popular and mature tool and is maintained by the Rust projec
 * [flapigen](https://github.com/Dushistov/flapigen-rs) (formerly Swig)
 * [cxx-async](https://github.com/pcwalton/cxx-async)
 * [ABI Cafe](https://github.com/Gankra/abi-cafe) for comparing the output of compilers for ABI compatibility
+* [crubit](https://github.com/google/crubit) experimental C++ interop from Chrome folk
 
 You may want to use COM/WinRT for inter-language interaction, the best Rust support for COM and WinRT is in [windows-rs](https://github.com/microsoft/windows-rs/).
 

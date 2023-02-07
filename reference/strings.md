@@ -65,14 +65,16 @@ The usual rules of [memory management with FFI](TODO) apply: memory must be rele
 
 ## FFI with Rust Strings
 
-Passing Rust strings across FFI to foreign functions is possible, but usually extracting foreign string types in Rust is easier. If you manipulate the contents of the strings, then you must respect both the usual invariants around [pointers](TODO) and Rust's string invariants (from [`String` docs](https://doc.rust-lang.org/nightly/std/string/struct.String.html#method.from_raw_parts)):
+It is possible to pass Rust strings across FFI to foreign functions. However, if you are designing an API, it is usually easier to use foreign strings in the FFI and convert these to and from Rust strings internally in Rust code.
 
-* The memory must have been previously allocated by the same allocator the standard library uses, with a required alignment of exactly 1.
-* The `length` of the string must be less than or equal to its `capacity.`
-* The `capacity` of the string must be the correct size of the allocation.
-* The first `length` bytes of the string must be valid UTF-8.
+If you manipulate the contents of the strings (either in foreign code or unsafe Rust code), then you must respect both the usual invariants around [pointers](TODO), and Rust's string invariants (from [`String` docs](https://doc.rust-lang.org/nightly/std/string/struct.String.html#method.from_raw_parts)):
 
-Note that if you are using the string types in your Rust functions, then you must establish these invariants in the foreign code. Doing so in the Rust code is unsound.
+* the memory must have be allocated by the same allocator the standard library uses, with a required alignment of exactly 1,
+* the `length` of the string must be less than or equal to its `capacity`,
+* the `capacity` of the string must be the correct size of the allocation,
+* the first `length` bytes of the string must be valid UTF-8.
+
+Note that if you are using the string types in Rust functions with foreign bindings, then you must establish these invariants in the foreign code. Doing so in the Rust code is likely to be unsound.
 
 To pass a Rust string to C++, you can use Cxx's bindings for [`String`](https://cxx.rs/binding/string.html) or [`&str`](https://cxx.rs/binding/str.html).
 
@@ -80,8 +82,8 @@ To pass a Rust string to C, you can use a struct with the correct layout (you co
 
 ### Memory management
 
-The easiest scenario is to create a `String` in Rust, pass a borrowed `&str` to foreign code and ensure that the foreign code does not store the pointer, pass it to another thread, call its destructor, or deallocate it. Then memory management just works.
+The easiest scenario is to create a `String` in Rust, pass a borrowed `&str` to foreign code and ensure that the foreign code does not store the pointer, pass it to another thread, call its destructor, or deallocate it.
 
-If you must store the string in foreign code, then you must pass the owned type `String`. In this case, you must ensure the pointer remains unique and pass it back to Rust for destruction.
+If you must store the string in foreign code, then you must pass the owned type `String`. In this case, you must ensure the pointer remains unique (in particular, you must not keep a reference in the Rust code) and pass it back to Rust for destruction.
 
-If you allocate memory for the string in foreign code, then you must not run its destructor in Rust and you must pass the string back to foreign code for destruction. The easiest way to do that is to pass `&str`. If you must pass the owned type, then you must ensure that there is no copy of the pointer kept in foreign code and that the pointer is returned to foreign code for destruction. Using a custom reference counted type might be a better alternative, see [TODO pattern](TODO).
+If you allocate memory for the string in foreign code, then you must not run its destructor in Rust, and you must pass the string back to foreign code for destruction. The easiest way to do that is to pass `&str` to Rust. If you must pass `String` (or a raw pointer used to produce a `String` in Rust code), then you must ensure that there is no copy of the pointer kept in foreign code, and that the pointer is returned to foreign code for destruction. Using a custom reference counted type might be a better alternative, see [TODO pattern](TODO).
