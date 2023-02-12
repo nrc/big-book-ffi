@@ -1,15 +1,20 @@
 # Data Types
 
-Data in both Rust and C/C++ is just ones and zeros in the computer's memory. These ones and zeros are independent of the language which generated them and there is no sense of 'compatibility'. However, when data is used, the compiler must have semantics for those ones and zeros which in Rust, C, and C++ is determined from the type of the data. When data is passed across the FFI boundary, two compilers are involved and each must have a type defined in its own language with which to understand the data. For this to produce correct results, corresponding types in the two languages must *agree*. An abstract example, if a function `f` is declared in both Rust and C and has a single argument with type `T_Rust` in Rust and `T_C` in C, then `T_Rust` and `T_C` must agree. If they do not then any operation on the data will be undefined behaviour.
+Data in both Rust and C/C++ is just ones and zeros in the computer's memory. These ones and zeros are independent of the language which generated them and there is no intrinsic sense of 'compatibility'. However, when data is used, the compiler must have semantics for those ones and zeros which in Rust, C, and C++ is determined by the types of the data. When data is passed across the FFI boundary, two compilers are involved and each must have a type defined in its own language with which to understand the data. For this to produce correct results, corresponding types in the two languages must *agree*. An abstract example, if a function `f` is declared in both Rust and C and has a single argument with type `T_Rust` in Rust and `T_C` in C, then `T_Rust` and `T_C` must agree. If they do not then any operation on the data will be undefined behaviour.
 
-This concept of agreement goes beyond what the bytes represent (e.g., that some sequence of four bytes should be interpreted as a little-endian, 32 bit, unsigned integer) and includes the invariants which are implicit for a type in a language. These invariants may be due to rules of the language, or due to the specific type itself. What makes this difficult is that invariants due to the language may be specified in a reference or spec, but may just be assumed by the compiler authors and otherwise undocumented. Invariants due to a specific type may be documented but, especially if they are invariants which users would not usually need to be aware of or are considered implementation details, may not be documented (or only documented in the source code). These may still be a concern when writing interop code since C/C++ allows treating data in ways usually forbidden in Rust.
+This concept of agreement goes beyond what the bytes represent (e.g., that some sequence of four bytes should be interpreted as a little-endian, 32 bit, unsigned integer) and includes the safety and validity invariants of the type. These invariants may be due to rules of the language, or due to the specific type itself. What makes this difficult is that invariants due to the language may be specified in a reference or spec, but may just be assumed by the compiler authors and otherwise undocumented. Invariants due to a specific type may be documented but, especially if they are invariants which users would not usually need to be aware of or are considered implementation details, may not be documented (or only documented in the source code). These may still be a concern when writing interop code since C/C++ allows treating data in ways usually forbidden in Rust.
+
+TODO safety and validity invariants - https://www.ralfj.de/blog/2018/08/22/two-kinds-of-invariants.html
 
 Invariants due to specific data types can be found in their documentation or source code. Invariants due to the kind of data types can be found below and in sub-chapters. Rust also has some invariants which apply to all data (or nearly all data), we'll cover those in the next few paragraphs.
 
-Much of Rust's ABI and invariants are formally undefined and may be subject to change. There have been very RFCs which cover this kind of thing, and work is ongoing within the Rust project and in academia to better specify language-wide invariants. However, there is a large body of code which works today and is unlikely to be broken, so much of this stuff is de facto standardized.
+Much of Rust's ABI and invariants are de jure undefined and may be subject to change. There have been several RFCs which cover this kind of thing, and work is ongoing within the Rust project and in academia to better specify language-wide invariants. However, there is a large body of code which works today and is unlikely to be broken, so much of this stuff is de facto standardized.
 
 
 TODO what does this all mean for doing FFI?
+
+TODO there is a two step process c_type -> binding_type -> rust_type, the C and binding types must agree, binding type typically has minimal requirements, binding type to rust type is a pure Rust conversion but to be valid we must establish the invariants of the rust type which may have to be done in foreign code. E.g., `int* -> *mut i32 -> &mut i32` equivalence of `int*` and `*mut i32` is trivial (only wrinkle is the int types), but for the conversion from `*mut i32` to `&mut i32`, we must guarantee that the pointer is unique, which depends on what is happening in the foreign code.
+    - let's break the whole chapter up along these lines
 
 ### Uniqueness and mutability
 
@@ -32,9 +37,10 @@ Invariants around pointer and reference types are covered in detail in the chapt
 
 TODO
     raw mut pointers
-    requirement in foreign/unsafe code
+    requirement in foreign/unsafe code (interior mutability)
         UnsafeCell
     scope of requirement (data referenced from Rust? Allocated in Rust?)
+        validity and safety invariants
 
 ### Borrowing
 
@@ -51,8 +57,7 @@ TODO
 
 ### Initialization
 
-TODO
-    all memory is initialized
+In Rust, all memory must always be initialized unless explicitly marked using [`MaybeUninit`](https://doc.rust-lang.org/nightly/std/mem/union.MaybeUninit.html). For most data, it should be ensured that data is initialized on the foreign side of the FFI boundary. If data may not be initialized, then the Rust type must be `MaybeUninit` (e.g., if passing a `Foo`, then the Rust type must be `MaybeUninit<Foo>`). See also the discussion on `null` in the section below on `pointers and references`.
 
 ### concurrency
 
@@ -88,13 +93,15 @@ two's compliment
 
 Rust and C/C++ have many different kinds of data type. These include primitive data, compound data (enums and structs, etc.), pointers, and more. For data to agree across the FFI boundary the kind of data type must correspond (and then the details must agree, which will be covered in the following chapters).
 
+TODO what goes here vs in the sub-chapters?
+
 ### Primitive types
 
 Primitive types are numeric (signed and unsigned integers, and floating point numbers), characters (but not strings), or booleans. These types have the same semantics and interpretation in C/C++ and in Rust. In particular, they are always passed by simple copying (i.e., without invoking a constructor, nor moved). The names of types and some details of their interpretation varies between C/C++ and Rust, see the chapter on [numeric types](numerics.md) for details. In particular, the names of types in both C/C++ and Rust can vary depending on the platform.
 
 Because of the matching semantics and lack of aliasing, using these types for interop is usually very simple and efficient.
 
-TODO void/()/!
+Both C and Rust have a void type: `void` in C and `()` in Rust (or can be implicit in both languages). These types trivially agree. Most zero-sized types cannot be used for interop, `()` is an exception when used as a return type, but cannot be used as a type parameter. For void pointers, see the pointers and references section, below.
 
 ### Compound data
 
@@ -112,7 +119,11 @@ Strings, smart pointers, and array-like collections (e.g., `Vec` in Rust) are al
 
 TODO
 
+layout - same as C
+    DSTs/wide pointers
+validity: non-null, dangling, unaligned, aliasing (if &mut), pointed-to value is valid (safe?)
 smart pointers
+void pointers
 
 ### arrays and slices
 

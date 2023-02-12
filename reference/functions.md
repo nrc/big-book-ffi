@@ -1,8 +1,10 @@
 # Functions and Methods
 
+Interoperation of functions (including function-like things such as methods and closures) means calling Rust functions from a foreign language or foreign functions from Rust. This means declaring a function in Rust and defining it in C or vice versa. The definition and declaration must *agree* or there will be undefined behaviour at runtime. The definition must also be discoverable by code in the other language (this is partly an aspect of linking, described [previously](README.md#Linking) and partly an aspect of the function definition). This section describes what it means for function declarations and definitions to agree across languages, and how Rust functions must be defined in order to be discoverable by foreign code.
+
 ## Functions
 
-### Declaration
+### Definition
 
 TODO
 

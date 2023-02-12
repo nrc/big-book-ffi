@@ -8,6 +8,14 @@ Generally speaking, Rust is ABI-compatible with C. That means that Rust can inte
 
 There are three challenges with Rust and foreign language interop: building the project, ensuring mechanical compatibility between types and functions, and ensuring that Rust's safety invariants are upheld. All FFI calls are unsafe in Rust. To ensure correctness, invariants around ownership and uniqueness, thread safety, and panics must be ensured at the FFI boundary.
 
+TODO
+
+* mechanics vs safety (FFI types vs idiomatic types)
+* levels of abstraction (making FFI ergonomic/idiomatic)
+* ffi and safety, and what is the challenge to writing an FFI layer
+* differences with other interop (managed langs, etc)
+* assessing the feasibility/difficulty of interop
+
 ## Architecture
 
 The more well-defined the boundary between Rust and foreign code, the easier things will be. At the limit, if your Rust and foreign code can live in different processes (i.e., are different programs compiled separately) and can communicate via some form of IPC then you won't have to worry about a lot of the issues with interop at all! Rust has great support for serialization/deserialization, gRPC, and other IPC/RPC technologies which can facilitate this.
