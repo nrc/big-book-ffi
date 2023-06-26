@@ -3,6 +3,7 @@
 [Introduction](intro.md)
 
 - [Overview](overview.md)
+- [Assessing/estimating interop complexity](estimating.md)
 - [Building and linking]()
 - [Bindings and representations](mechanics/README.md)
 - [Building an abstraction layer]()
@@ -11,7 +12,6 @@
   - [Ownership and memory management - mem::forget]()
   - [FFI types and idiomatic types]()
   - [Error handling]()
-- [Assessing/estimating interop complexity]()
 - [Patterns](patterns/README.md)
   - [Layered library design](patterns/layered.md)
 - [Case studies]()
