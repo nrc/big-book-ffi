@@ -1,0 +1,250 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Assessing/estimating interop complexity - The Big Book of Rust Interop</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="favicon.svg">
+        <link rel="shortcut icon" href="favicon.png">
+        <link rel="stylesheet" href="css/variables.css">
+        <link rel="stylesheet" href="css/general.css">
+        <link rel="stylesheet" href="css/chrome.css">
+        <link rel="stylesheet" href="css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="highlight.css">
+        <link rel="stylesheet" href="tomorrow-night.css">
+        <link rel="stylesheet" href="ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="intro.html">Introduction</a></li><li class="chapter-item expanded "><a href="overview.html"><strong aria-hidden="true">1.</strong> Overview</a></li><li class="chapter-item expanded "><a href="estimating.html" class="active"><strong aria-hidden="true">2.</strong> Assessing/estimating interop complexity</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.</strong> Building and linking</div></li><li class="chapter-item expanded "><a href="mechanics/index.html"><strong aria-hidden="true">4.</strong> Bindings and representations</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">5.</strong> Building an abstraction layer</div></li><li><ol class="section"><li class="chapter-item expanded "><div><strong aria-hidden="true">5.1.</strong> Modularisation</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">5.2.</strong> Safety</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">5.3.</strong> Ownership and memory management - mem::forget</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">5.4.</strong> FFI types and idiomatic types</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">5.5.</strong> Error handling</div></li></ol></li><li class="chapter-item expanded "><a href="patterns/index.html"><strong aria-hidden="true">6.</strong> Patterns</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="patterns/layered.html"><strong aria-hidden="true">6.1.</strong> Layered library design</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">7.</strong> Case studies</div></li><li class="chapter-item expanded "><a href="reference/index.html"><strong aria-hidden="true">8.</strong> Reference</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="reference/functions.html"><strong aria-hidden="true">8.1.</strong> Functions and methods</a></li><li class="chapter-item expanded "><a href="reference/data-types.html"><strong aria-hidden="true">8.2.</strong> Data types</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="reference/numerics.html"><strong aria-hidden="true">8.2.1.</strong> Numeric types</a></li><li class="chapter-item expanded "><a href="reference/strings.html"><strong aria-hidden="true">8.2.2.</strong> Strings</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="resources.html"><strong aria-hidden="true">9.</strong> Resources</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Big Book of Rust Interop</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <p>TODO exec summary</p>
+<h1 id="estimating-the-complexity-of-interop"><a class="header" href="#estimating-the-complexity-of-interop">Estimating the complexity of interop</a></h1>
+<p>This chapter aims to help you estimate the costs and risks of integrating Rust into an existing mixed-language project. You'll be able to make a better judgement if you read the rest of the documentation and can therefore understand the issues more deeply. Hopefully this chapter can give you a framework for estimation, and if you don't have time to dive deeper, then at least give you a rough idea.</p>
+<p>This chapter does not aim to help with the question of whether Rust is a good choice for a project, only to cover the integration component of that choice.</p>
+<h2 id="rewriting-a-project-or-adding-to-a-project"><a class="header" href="#rewriting-a-project-or-adding-to-a-project">Rewriting a project or adding to a project?</a></h2>
+<p>Integrating Rust with a foreign language typically happens in one of two scenarios: adding Rust to an existing non-Rust project, or converting an existing non-Rust project into a Rust one. The difference being that in the second case, the goal is for the entire project (or most of it) to be Rust, whereas in the first case, only a small portion may ever be Rust.</p>
+<p>When adding to a project, the parameters which affect integration are usually well-known. Typically the project will not change much at the same time as adding a Rust portion. So there is not much opportunity to change the cost or risk of adding Rust. In this case the more that the Rust portion is self-contained, the better. Adding a little Rust all over the project is a much riskier undertaking than adding single Rust component with a limited interface.</p>
+<p>When converting a project to Rust, as good software engineers, we want to do the conversion as incrementally and iteratively as possible. However, this has the requirement that existing foreign code integrates with new Rust code. The more incremental the conversion, the more fine-grained the integration must be and this will make interop more difficult. From the perspective of integration, the best-case scenario is to do a clean rewrite with zero temporary interop (taking advantage of existing test suites, documentation, requirements, etc. but not doing an incremental rewrite). Where this is not possible, doing a rewrite one component at a time, rather than one function, data structure, or file at a time is highly desirable. In my opinion, the former is likely to be successful (although depending on many other factors), but the latter is doomed to failure in nearly all circumstances.</p>
+<h2 id="languages"><a class="header" href="#languages">Languages</a></h2>
+<p>As a general rule, integrating Rust with C is the easiest scenario. If the foreign language is C++, then things will be harder, but how hard will depend on the style used in the C++ code and the nature of the project (see below for more discussion). The more C-like the code (and especially the interface with Rust), the easier integration will be.</p>
+<p>If the foreign language is a managed language (C#, Java, Python, Ruby, etc.) then integration is possible but will have very different characteristics to integrating with native languages. The costs and risks will be specific to the foreign language (some have much better support for Rust integration than others). These docs should be expanded in the future to better cover this scenario.</p>
+<h2 id="tooling"><a class="header" href="#tooling">Tooling</a></h2>
+<h3 id="build-and-dependency-management"><a class="header" href="#build-and-dependency-management">Build and dependency management</a></h3>
+<p>Rust projects are natively built with Cargo. Cargo is a build system and package manager. These areas of functionality are tightly integrated and Cargo does not integrate easily with other build systems. Using rustc directly is a rare path and is thus unpleasant and poorly supported.</p>
+<p>One straightforward scenario is where a Rust crate is not depended on by any foreign code (i.e., it is a leaf node in the dependency graph). In this case all foreign code is upstream of Rust code and build system integration is fairly straightforward. Similarly, if a Rust crate does not depend on any foreign code (at least outside of the standard library), then the Rust code can be compiled in relative isolation and again build system integration is simpler. Having multiple Rust components in one or other of these situations is also fairly straightforward, as long as they don't depend on each other and you don't mind some duplication of compilation where there are shared dependencies (i.e., the extra time and potential version incompatibility).</p>
+<p>More overlap and constraints between components makes build system integration more complicated. If you will require multiple 'layers' of dependency between Rust and foreign code, and require the Rust components to play nicely with respect to Cargo's version resolution, then integration will be complicated and require effort (how much depends on which build system you're integrating with, see below, and the details of the project).</p>
+<p>The most common pattern for build system integration, is to run Cargo's package management functionality offline. Rust dependency sources can then be stored in-tree and when building, they only need to be compiled (which, with some setup, does not require Cargo). Tooling exists to help with this (cargo vendor). The downside of this approach is that updating dependencies is a manual step. It also makes the source tree much larger and the VC history a little less clear. If your project can accommodate this pattern, then build system integration will be much, much easier than if it can't.</p>
+<p>Some build systems have existing tools for Rust/Cargo integration (or are a well-troden path with good docs). If you are using these, integration will be easier:</p>
+<ul>
+<li>Buck</li>
+<li>Bazel</li>
+<li>make/cmake?</li>
+<li>TODO any more? Links and descriptions for above</li>
+</ul>
+<p>Linking Rust binaries with other native binaries is generally straightforward because Rust follows native standards for each platform. Integration may be more difficult if you require dynamic linking since Rust has a bias towards static linking, and although dynamic linking is supported, it is a less common path. Link-time optimisation (and PGO) will work with Rust, including across languages (which means that there is not even an optimisation penalty for mixing Rust with C/C++ in many cases), however, Rust uses LLVM for its backend, and so LTO will only work within the LLVM ecosystem. TODO is this true? Is it possible to LTO without LLVM?</p>
+<h3 id="ci"><a class="header" href="#ci">CI</a></h3>
+<p>TODO</p>
+<h3 id="static-analysis-and-related-tooling"><a class="header" href="#static-analysis-and-related-tooling">Static analysis and related tooling</a></h3>
+<p>elf binaries, debuginfo, llvm ecosystem
+valgrind seems to work quite well
+relying on gcc or VS means hard work
+analyses which rely on optimisation might have issues
+anything which relies on source code or AST will not work
+Rust has fairly good tooling (rustfmt, clippy, miri, etc) often but not always works in the presence of foreign code
+TODO - more specific stuff for widely used tools</p>
+<h3 id="debugging-profiling-and-other-developer-tools"><a class="header" href="#debugging-profiling-and-other-developer-tools">Debugging, profiling, and other developer tools</a></h3>
+<p>debugging and profiling generally work across language boundaries, IDEs generally don't (although usually you can get pretty good independent coverage of the different languages)
+only likely to be problems if tooling is tied to gcc or VS ecosystems</p>
+<h2 id="nature-of-the-project"><a class="header" href="#nature-of-the-project">Nature of the project</a></h2>
+<p>This section covers some topics which are about various aspects of a projects architecture, design, and code style. These are mostly not 'black and white' topics, but rather have a bunch of nuance and subtlety. These are also mostly things where you can make choices early in our adoption of Rust which will make integration <em>a lot</em> easier.</p>
+<p>If your project has a microservices-style architecture with components running on their own nodes or in their own processes and you can keep Rust in entirely new components, then integration should be easy (relatively). Rust has good support for many forms of IPC, networking, serialization/deserialization, etc. You may still have integration issues with build or CI which need considering, but for the code itself, you are in a best-case scenario.</p>
+<p>Only slightly worse than the previous situation is if you have a monolithic application, but you can keep the new Rust code in a separate process. The integration will still be easy, but you're likely to have more design issues.</p>
+<p>Assuming Rust code must be in the same process as existing foreign code, the more modular the architecture, the easier integration will be. Most challenges with interop are design challenges where it is difficult to ensure modularity (and the specific kind of modularity which make interop easier) in the face of requirements which favour tight integration of components. Keeping Rust to modules/components with strong, well-designed APIs will make interop easier.</p>
+<p>More specifically, the kinds of modularity that benefit interop are:</p>
+<ul>
+<li>TODO</li>
+</ul>
+<p>And a few things which don't help much:</p>
+<ul>
+<li>keeping data private and using accessor methods (unless those accessor methods enforce invariants of the data),</li>
+<li>TODO</li>
+</ul>
+<p>Rust interop primarily uses the C ABI, but many C++ features work across the language boundary too. There are both C and C++ features which can make interop more or less difficult. Difficult can mean requiring more tooling, more conversion of data types at the language boundary, more invariants which must be enforced by the programmer, language features which must be manually emulated rather than implemented by the compiler, riskier code (i.e., bugs are more likely and/or harder to see), or that direct sharing of data or calling of functions is not possible.</p>
+<p>The following features work without any runtime conversion and don't require tooling (though using bindgen may make things easier):</p>
+<ul>
+<li>primitive numeric and boolean data,</li>
+<li>structs and field access,</li>
+<li>simple (C-like) enums,</li>
+<li>function calls with C ABI,</li>
+<li>opaque pointers (i.e., pointers which are never dereferenced),</li>
+</ul>
+<p>The following features require either manual emulation in Rust or some encoding:</p>
+<p>TODO, for each, discuss the implications</p>
+<ul>
+<li>lifecycles methods (constructors, copy constructors, destructors, etc.),</li>
+<li>method calls,</li>
+</ul>
+<p>TODO - features, C++ features
+enums
+inheritance
+move semantics
+pointer arithmetic, casting, etc
+generics, template tomfoolery
+Rust features into C/C++ - enums, traits, etc, etc</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="overview.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="mechanics/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="overview.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="mechanics/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>

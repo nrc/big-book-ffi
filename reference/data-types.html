@@ -1,0 +1,263 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Data types - The Big Book of Rust Interop</title>
+        <!-- Custom HTML head -->
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff" />
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+    </head>
+    <body>
+        <!-- Provide site root to javascript -->
+        <script type="text/javascript">
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script type="text/javascript">
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script type="text/javascript">
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('no-js')
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add('js');
+        </script>
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script type="text/javascript">
+            var html = document.querySelector('html');
+            var sidebar = 'hidden';
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            }
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded affix "><a href="../intro.html">Introduction</a></li><li class="chapter-item expanded "><a href="../overview.html"><strong aria-hidden="true">1.</strong> Overview</a></li><li class="chapter-item expanded "><a href="../estimating.html"><strong aria-hidden="true">2.</strong> Assessing/estimating interop complexity</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.</strong> Building and linking</div></li><li class="chapter-item expanded "><a href="../mechanics/index.html"><strong aria-hidden="true">4.</strong> Bindings and representations</a></li><li class="chapter-item expanded "><div><strong aria-hidden="true">5.</strong> Building an abstraction layer</div></li><li><ol class="section"><li class="chapter-item expanded "><div><strong aria-hidden="true">5.1.</strong> Modularisation</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">5.2.</strong> Safety</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">5.3.</strong> Ownership and memory management - mem::forget</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">5.4.</strong> FFI types and idiomatic types</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">5.5.</strong> Error handling</div></li></ol></li><li class="chapter-item expanded "><a href="../patterns/index.html"><strong aria-hidden="true">6.</strong> Patterns</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../patterns/layered.html"><strong aria-hidden="true">6.1.</strong> Layered library design</a></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">7.</strong> Case studies</div></li><li class="chapter-item expanded "><a href="../reference/index.html"><strong aria-hidden="true">8.</strong> Reference</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../reference/functions.html"><strong aria-hidden="true">8.1.</strong> Functions and methods</a></li><li class="chapter-item expanded "><a href="../reference/data-types.html" class="active"><strong aria-hidden="true">8.2.</strong> Data types</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../reference/numerics.html"><strong aria-hidden="true">8.2.1.</strong> Numeric types</a></li><li class="chapter-item expanded "><a href="../reference/strings.html"><strong aria-hidden="true">8.2.2.</strong> Strings</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../resources.html"><strong aria-hidden="true">9.</strong> Resources</a></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky bordered">
+                    <div class="left-buttons">
+                        <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Big Book of Rust Interop</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script type="text/javascript">
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="data-types"><a class="header" href="#data-types">Data Types</a></h1>
+<p>Data in both Rust and C/C++ is just ones and zeros in the computer's memory. These ones and zeros are independent of the language which generated them and there is no intrinsic sense of 'compatibility'. However, when data is used, the compiler must have semantics for those ones and zeros which in Rust, C, and C++ is determined by the types of the data. When data is passed across the FFI boundary, two compilers are involved and each must have a type defined in its own language with which to understand the data. For this to produce correct results, corresponding types in the two languages must <em>agree</em>. An abstract example, if a function <code>f</code> is declared in both Rust and C and has a single argument with type <code>T_Rust</code> in Rust and <code>T_C</code> in C, then <code>T_Rust</code> and <code>T_C</code> must agree. If they do not then any operation on the data will be undefined behaviour.</p>
+<p>This concept of agreement goes beyond what the bytes represent (e.g., that some sequence of four bytes should be interpreted as a little-endian, 32 bit, unsigned integer) and includes the safety and validity invariants of the type. These invariants may be due to rules of the language, or due to the specific type itself. What makes this difficult is that invariants due to the language may be specified in a reference or spec, but may just be assumed by the compiler authors and otherwise undocumented. Invariants due to a specific type may be documented but, especially if they are invariants which users would not usually need to be aware of or are considered implementation details, may not be documented (or only documented in the source code). These may still be a concern when writing interop code since C/C++ allows treating data in ways usually forbidden in Rust.</p>
+<p>TODO safety and validity invariants - https://www.ralfj.de/blog/2018/08/22/two-kinds-of-invariants.html</p>
+<p>Invariants due to specific data types can be found in their documentation or source code. Invariants due to the kind of data types can be found below and in sub-chapters. Rust also has some invariants which apply to all data (or nearly all data), we'll cover those in the next few paragraphs.</p>
+<p>Much of Rust's ABI and invariants are de jure undefined and may be subject to change. There have been several RFCs which cover this kind of thing, and work is ongoing within the Rust project and in academia to better specify language-wide invariants. However, there is a large body of code which works today and is unlikely to be broken, so much of this stuff is de facto standardized.</p>
+<p>TODO what does this all mean for doing FFI?</p>
+<p>TODO there is a two step process c_type -&gt; binding_type -&gt; rust_type, the C and binding types must agree, binding type typically has minimal requirements, binding type to rust type is a pure Rust conversion but to be valid we must establish the invariants of the rust type which may have to be done in foreign code. E.g., <code>int* -&gt; *mut i32 -&gt; &amp;mut i32</code> equivalence of <code>int*</code> and <code>*mut i32</code> is trivial (only wrinkle is the int types), but for the conversion from <code>*mut i32</code> to <code>&amp;mut i32</code>, we must guarantee that the pointer is unique, which depends on what is happening in the foreign code.
+- let's break the whole chapter up along these lines</p>
+<h3 id="uniqueness-and-mutability"><a class="header" href="#uniqueness-and-mutability">Uniqueness and mutability</a></h3>
+<p>In Rust, data is immutable by default. Data must be known to be mutable from its type to be mutated (TODO phrasing). It is undefined behaviour to convert immutable data into mutable data, or to directly mutate immutable data (contrast this to C, where const-ness can be cast away).</p>
+<p>Data can be mutated only if it is known to be unique, i.e., data cannot be accessed other than via the reference used to mutate the data. Such uniqueness may be established either statically (e.g., references <code>&amp;T</code> and <code>&amp;mut T</code>) or dynamically (e.g., <code>RefCell</code>). All dynamic tracking of uniqueness must use <code>unsafe</code> and raw pointers code at some level, usually wrapped so that end users only see safe abstractions.</p>
+<p>References and values can only be mutated if they are declared as mutable (e.g., a <code>&amp;mut T</code> can be mutated and a <code>&amp;T</code> can never be mutated) and the compiler can prove they are unique at the point mutation occurs (e.g., a <code>&amp;mut T</code> cannot be mutated if there exists a live <code>&amp;T</code> referencing the same value). Raw pointers have the former constraint but not the latter. A <code>*mut T</code> pointer can always be dereferenced (an <code>unsafe</code> operation) and mutated. The programmer must ensure that when the pointer is dereferenced, TODO undefined?</p>
+<p>An important aspect of Rust for preserving uniqueness is <em>move semantics</em>. When data is passed from one location to another (e.g., assigned to a variable or passed to a function), it is logically moved (you can think of this as a bitwise copy, then deleting the old copy, although the compiler may optimise that). That means that if data is unique before being passed, it is also unique after being passed. Compare this to C/C++ where data is copied or Java-like languages where passing most data implicitly passes a reference.</p>
+<p>Some data in Rust is copied rather than moved. Primitive types, immutable references, raw pointers, and any data structure which implements the <code>Copy</code> marker trait are copied rather than moved.</p>
+<p>Note than both moving and copying are simple, bitwise operations. Neither invokes a constructor or destructor (in contrast to C++).</p>
+<p>If passing an object from Rust to C/C++, care must be taken around uniqueness. If passing by reference, then pointers/references in C/C++ are copied and so will not be unique. If passing by value, then data will be copied, not moved. Therefore, Rust data which implements <code>Copy</code> can be safely passed by value to C/C++ and passed around or stored. Immutable references/pointers can also be safely passed to C/C++ as long as they are never mutated or data is mutated through them. If non-<code>Copy</code> data is to be passed by value, or data is passed by reference and is mutated, more care must be taken around these invariants.</p>
+<p>Invariants around pointer and reference types are covered in detail in the chapter on <a href="TODO">pointers, references, and arrays</a>.</p>
+<p>TODO
+raw mut pointers
+requirement in foreign/unsafe code (interior mutability)
+UnsafeCell
+scope of requirement (data referenced from Rust? Allocated in Rust?)
+validity and safety invariants</p>
+<h3 id="borrowing"><a class="header" href="#borrowing">Borrowing</a></h3>
+<p>TODO
+uniqueness
+mutable and immutable borrows
+overlapping borrows
+lifetimes
+lifetime due to scope - presence of dtor/attribute? and NLL
+drop check and phantomdata
+storing data
+'static borrows
+variance</p>
+<h3 id="initialization"><a class="header" href="#initialization">Initialization</a></h3>
+<p>In Rust, all memory must always be initialized unless explicitly marked using <a href="https://doc.rust-lang.org/nightly/std/mem/union.MaybeUninit.html"><code>MaybeUninit</code></a>. For most data, it should be ensured that data is initialized on the foreign side of the FFI boundary. If data may not be initialized, then the Rust type must be <code>MaybeUninit</code> (e.g., if passing a <code>Foo</code>, then the Rust type must be <code>MaybeUninit&lt;Foo&gt;</code>). See also the discussion on <code>null</code> in the section below on <code>pointers and references</code>.</p>
+<h3 id="concurrency"><a class="header" href="#concurrency">concurrency</a></h3>
+<p>TODO
+effect on uniqueness
+send/sync
+unsafe and dynamic guarantees (arc, mutex, scoped threads)
+thread-safety and FFI
+Rust stuff
+thread-safety guarantees from C/C++
+atomic/non-atomic access to shared memory (even volatile ops)
+memory model is C++20 (nomicon atomics link)</p>
+<h3 id="layout-and-alignment"><a class="header" href="#layout-and-alignment">Layout and alignment</a></h3>
+<p>TODO
+alignment and storage address
+size = multiple of alignment
+bounds/OOB access
+can't assume layout without repr, see structs and enums
+DSTs
+ZSTs</p>
+<h3 id="platform-specific-invariants"><a class="header" href="#platform-specific-invariants">Platform-specific invariants</a></h3>
+<p>CHERI
+WASM - function/data pointers
+ARM?
+padding bits
+two's compliment</p>
+<h2 id="kinds-of-data-type"><a class="header" href="#kinds-of-data-type">Kinds of data type</a></h2>
+<p>Rust and C/C++ have many different kinds of data type. These include primitive data, compound data (enums and structs, etc.), pointers, and more. For data to agree across the FFI boundary the kind of data type must correspond (and then the details must agree, which will be covered in the following chapters).</p>
+<p>TODO what goes here vs in the sub-chapters?</p>
+<h3 id="primitive-types"><a class="header" href="#primitive-types">Primitive types</a></h3>
+<p>Primitive types are numeric (signed and unsigned integers, and floating point numbers), characters (but not strings), or booleans. These types have the same semantics and interpretation in C/C++ and in Rust. In particular, they are always passed by simple copying (i.e., without invoking a constructor, nor moved). The names of types and some details of their interpretation varies between C/C++ and Rust, see the chapter on <a href="numerics.html">numeric types</a> for details. In particular, the names of types in both C/C++ and Rust can vary depending on the platform.</p>
+<p>Because of the matching semantics and lack of aliasing, using these types for interop is usually very simple and efficient.</p>
+<p>Both C and Rust have a void type: <code>void</code> in C and <code>()</code> in Rust (or can be implicit in both languages). These types trivially agree. Most zero-sized types cannot be used for interop, <code>()</code> is an exception when used as a return type, but cannot be used as a type parameter. For void pointers, see the pointers and references section, below.</p>
+<h3 id="compound-data"><a class="header" href="#compound-data">Compound data</a></h3>
+<p>Compound data types are structs, unions, and enums in C/C++ and Rust, tuples and tuple structs in Rust, and classes in C++. Structs, unions, and some enums basically correspond between C/C++ and Rust, see the following sub-chapters for details. Tuples in Rust cannot be used in FFI because they always have the default representation (see below and the chapter on <a href="TODO">structs, tuples, and unions</a>). Tuple structs correspond with foreign structs. Classes in C++ correspond with structs in Rust (although this is a complex correspondence), see the chapter on <a href="TODO">classes</a>.</p>
+<p>Individual compound data types are likely to have their own invariants which will need to be maintained in foreign code (or by Rust code for foreign types).</p>
+<p>By default, the Rust compiler can layout data however it likes and this can change between compiler versions (or even for with the same compiler version, in theory). This is incompatible with FFI, and so you must specify an alternative representation for data types for them to agree with a foreign type. We'll cover this in detail in the following sub-chapters.</p>
+<p>Aliases (<code>typedef</code> in C++ or <code>type</code> in Rust) are present only at compile time and do not affect the representation or the invariants of the data. Rust's 'newtypes' (usually a tuple struct with a single field) are not aliases and have the same behaviour as other compound types, i.e., can introduce new invariants and may have a different representation (unless explicitly specified), compared with the underlying data.</p>
+<p>Strings, smart pointers, and array-like collections (e.g., <code>Vec</code> in Rust) are all compound data types in both Rust and C/C++. In principle, these do not require any special treatment over other user types. However, they are more likely to have important invariants which must be maintained for the sake of soundness. Several examples will be covered in the following sub-chapters.</p>
+<h3 id="pointers-and-references"><a class="header" href="#pointers-and-references">pointers and references</a></h3>
+<p>TODO</p>
+<p>layout - same as C
+DSTs/wide pointers
+validity: non-null, dangling, unaligned, aliasing (if &amp;mut), pointed-to value is valid (safe?)
+smart pointers
+void pointers</p>
+<h3 id="arrays-and-slices"><a class="header" href="#arrays-and-slices">arrays and slices</a></h3>
+<p>TODO</p>
+<h3 id="trait-objects-and-class-objects-and-methods"><a class="header" href="#trait-objects-and-class-objects-and-methods">trait objects and class objects, and methods</a></h3>
+<p>TODO</p>
+<h2 id="generic-types"><a class="header" href="#generic-types">Generic types</a></h2>
+<p>TODO</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../reference/functions.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+                            <a rel="next" href="../reference/numerics.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../reference/functions.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+                    <a rel="next" href="../reference/numerics.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <script type="text/javascript">
+            window.playground_copyable = true;
+        </script>
+        <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+
+        <!-- Custom JS scripts -->
+    </body>
+</html>
